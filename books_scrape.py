@@ -1,15 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
+import json
+import os
 
 
 '''
-scrape http://books.toscrape.com/ and extract
+This program will scrape http://books.toscrape.com/ and extract
     • book title
     • price
     • availability
-    • image
     • category
     • rating
+
+in a json file and also download all the corresponding 
+images in the 'img' folder
 
 '''
 
@@ -32,6 +36,14 @@ if __name__ == "__main__":
 
 	# print(category_names_urls)
 
+	image_num = 0
+	scraped_data = []
+	img_folder_name = "books_to_scrape_img"
+	try:
+		os.mkdir(img_folder_name)
+	except:
+		pass
+
 	for category_name, category_url in category_names_urls:
 		response = requests.get(category_url)
 		html_page = response.content
@@ -48,13 +60,26 @@ if __name__ == "__main__":
 			price = price_div.find("p", attrs={"class" : "price_color"}).text
 			availability = price_div.find("p", attrs={"class" : "instock availability"}).text.strip()
 
-			print(category_name)
-			print(image_url)
-			print(rating)
-			print(book_title)
-			print(price)
-			print(availability)
-			print("\n\n\n")
+			image_data = requests.get(image_url).content
+			image_filename = '{}/image_{}.jpg'.format(img_folder_name, image_num)
+			with open(image_filename, 'wb') as handler:
+			    handler.write(image_data)
+			    image_num += 1
+
+			scraped_data.append({"category" : category_name, 
+				"rating" : rating, "rating" : rating, 
+				"title" : book_title, "price" : price, 
+				"availability" : availability, 
+				"image_filename" : image_filename})
 
 
+			# print(category_name)
+			# print(image_url)
+			# print(rating)
+			# print(book_title)
+			# print(price)
+			# print(availability)
+			# print("\n\n\n")
 
+	with open('books_to_scrape_data.json', 'w') as outfile:
+	    json.dump(scraped_data, outfile)
