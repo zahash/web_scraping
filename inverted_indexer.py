@@ -17,13 +17,24 @@ import math
 import nltk
 nltk.download('punkt')
 
+# docs = {
+# "doc1" : "To be or not to be, this is the question!",
+# "doc2" : "I have a pair of problems for you to solve today.",
+# "doc3" : "It’s a long way to Tipperary, it’s a long way to go. . .",
+# "doc4" : "I’ve been walking a long way to be here with you today.",
+# "doc5" : "I am not able to question these orders.",
+# }
+
 docs = {
-"doc1" : "To be or not to be, this is the question!",
-"doc2" : "I have a pair of problems for you to solve today.",
-"doc3" : "It’s a long way to Tipperary, it’s a long way to go. . .",
-"doc4" : "I’ve been walking a long way to be here with you today.",
-"doc5" : "I am not able to question these orders.",
+    "doc1" : "ant ant bee",
+    "doc2" : "dog bee dog hog dog ant dog",
+    "doc3" : "cat gnu dog eel fox"
 }
+
+
+# preprocess docs
+for doc_name, doc_string in docs.items():
+    docs[doc_name] = doc_string.lower()
 
 
 all_tokens = []
@@ -48,9 +59,11 @@ inverse_document_freqencies = {}
 for token, term_freq in term_frequencies.items():
 	inverse_document_freqencies[token] = round( math.log2(len(docs)/term_freq) , 3)
 
-# print(term_frequencies)
-# print(inverse_document_freqencies)
 
 term_weights = {token: term_frequencies[token] * inverse_document_freqencies[token] for token in all_tokens}
 
-print(term_weights)
+print("all_tokens : ", all_tokens, end='\n\n\n')
+print("indexer : ", indexer, end='\n\n\n')
+print("term_frequencies : ", term_frequencies, end='\n\n\n')
+print("inverse_document_freqencies : ", inverse_document_freqencies, end='\n\n\n')
+print("term_weights : ", term_weights, end='\n\n\n')
