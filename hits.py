@@ -5,7 +5,9 @@ from collections import defaultdict
 out_links = {}
 in_links = defaultdict(list)
 
-html_filenames = [filename for filename in os.listdir(".") if filename.endswith(".html")]
+base_dir = "generated_html_files"
+
+html_filenames = [os.path.join(base_dir, filename) for filename in os.listdir(base_dir) if filename.endswith(".html")]
 
 for filename in html_filenames:
     with open(filename, "r") as html_file:
@@ -48,6 +50,5 @@ while True:
     if (hubs_scores.items() == old_hubs_scores.items()) and (authorities_scores == old_authorities_scores):
         break
 
-    print("authorities_scores: ", authorities_scores)
-    print("hubs_scores: ", hubs_scores)
-    print("\n\n")
+print("authorities_scores: ", authorities_scores, end="\n\n")
+print("hubs_scores: ", hubs_scores, end="\n\n")
